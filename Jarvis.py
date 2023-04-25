@@ -546,10 +546,10 @@ def Start_Jarvis():
 
 speak('recognising Face')
 print('Recognising Face....')
-cascadePath = "D:\\Rigved\\python\\face recognition\\haarcascade_frontalface_default.xml"
+cascadePath = "haarcascade_frontalface_default.xml"
 faceCascade = cv2.CascadeClassifier(cascadePath)
 recognizer = cv2.face.LBPHFaceRecognizer_create()
-recognizer.read('D:\\Rigved\\python\\face recognition\\trainer/trainer2.yml')
+recognizer.read('trained_model.yml')
 
 font = cv2.FONT_HERSHEY_SIMPLEX
 
@@ -582,7 +582,7 @@ while True:
         id, accuracy = recognizer.predict(converted_image[y:y+h, x:x+w])
 
         if (accuracy < 100):
-            id = 'Rigevd'
+            id = 'Binod'
             accuracy = "{0}%".format(round(100-accuracy))
             speak('recognised')
             print("Recognised.")
