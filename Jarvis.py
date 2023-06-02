@@ -450,7 +450,7 @@ def Start_Jarvis():
 
                     return datetime.timedelta(seconds=self.seconds_left)
 
-            if __name__ == 'Jarvisad':
+            if __name__ == '__main__':
                 root = tk.Tk()
                 root.resizable(False, False)
 
