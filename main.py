@@ -1,117 +1,124 @@
 from time import strftime
-import pickle
 from tkinter import Label
-import tkinter.messagebox
 import tkinter as tk
 import time as t
 import subprocess as sub
 from playsound import playsound as play
 import os
-import ast
 import numpy as np
 import random
 import pandas as pd
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression #for iphone
 import webbrowser as web
 import pyautogui as pg
 import wikipedia as wiki
 import pywhatkit as kit
 import pyjokes as jokes
 import requests as rq
-from math import degrees
 from bs4 import BeautifulSoup
-import pyttsx3
+import pyttsx3 as py
 import datetime
 from time import *
-import speech_recognition as speech
-
+import speech_recognition as sr
 
 toss = ["head", "tails"]
 
-byes = {"au revoir its bye in French",
-        "do svidaniya its bye in Russian",
-        "adiós its bye in Spanish",
-        "Zàijiàn its bye in Chineese"
-        "Zàijiàn its bye in Chineese",
-        "addio its bye in Italian",
-        "Sayōnara its bye in Japeneese",
-        "Tschüss its bye in German",
-        "alavida its bye in hindi"}
+now = datetime.datetime.now()
+
+byes={"au revoir its bye in French",
+"do svidaniya its bye in Russian",
+"adiós its bye in Spanish",
+"Zàijiàn its bye in Chineese"
+"Zàijiàn its bye in Chineese",
+"addio its bye in Italian",
+"Sayōnara its bye in Japeneese",
+"Tschüss its bye in German",
+"alavida its bye in hindi"}
+
 # greets
-greets = ["Hola! that's hello in Spanish!",
-          "Salut! that is hi in French",
-          "Anneyonghaseyo! that is hello in Korean",
-          "Hallo! that is hi in German!",
-          "Ciao! That's hi in Intalian!"]
+greets=["Hey!",
+"Salut!",
+"Anneyonghaseyo! ",
+"Hallo! !",
+"Ciao!",
+"Holla!",
+"Hi!"]
 
 
-# print(...)
+E = py.init("sapi5")
 
-E = pyttsx3.init("sapi5")
-
-M = ["What can you see in darkness",
-    "what starts with 1 and ends with none",
-    "which was the tallest mountain before mount Everest was discovered",
-    "which is the largest city in the world",
-    "what is green but when fallen turns yellow ?",
-    "I am a part of your home niether inside nor outside. Who am I ",
-    "which month has 28 days ? ",
-    "what ends with end? "]
+M = ["What can you see in darkness","what starts with 1 and ends with none","which was the tallest mountain before mount Everest was discovered","what is green but when fallen turns yellow ?","I am a part of your home niether inside nor outside. Who am I ","which month has 28 days ? ","what ends with end? "]
 
 voices = E.getProperty('voices')
 E.setProperty('voice', voices[1].id)
-hour = int(t.strftime('%H'))
-
-def wish():
-    if (hour >= 24):
-        speak("Good Afternoon! ")
-        print("Good Afternoon! ")
-        E.runAndWait()
-    if (hour < 12):
-        speak("Good Morining! ")
-        print("Good Morning! ")
-        E.runAndWait()
-    if (hour >= 18):
-        speak("Good Evening! ")
-        print("Good Evening! ")
-        E.runAndWait()
-
 
 class Exception():
-    pass
-    print('')
+        pass
+        print('')
 
+E.setProperty("RATE",200)
 def speak(audio):
-    E.say(audio)
-    E.runAndWait()
+        E.say(audio)
+        E.runAndWait()
 
+nowG = int(datetime.datetime.now().hour)
 
-wish()
+def ame():
+        if nowG>=24:
+                speak("Good Afternoon! ")
+                print("Good Afternoon! ")
+                E.runAndWait()
+        if nowG<12:
+                speak("Good Morining! ")
+                print("Good Morning! ")
+                E.runAndWait()
+        if nowG>=18:
+                speak("Good Evening! ")
+                print("Good Evening! ")
+                E.runAndWait()
+
 print("I am your Jarvis! ")
 print("What can I do for you")
 speak("I am Jarvis! ")
 speak("What can I do for you")
-
 while True:
+    r = sr.Recognizer() 
+    with sr.Microphone() as source:
+        r.adjust_for_ambient_noise(source)
+        print("Listening...")
+        r.pause_threshold = 1
+        audio = r.listen(source, timeout=1, phrase_time_limit=5)
     try:
-        r = speech.Recognizer()
-        with speech.Microphone() as source:
-            r.adjust_for_ambient_noise(source)
-            print("Listening . . . . .")
-            audio = r.listen(source)
-
-        userA = r.recognize(audio).lower()
-        userA = userA.lower()
+        print('Recognizing...')
+        command = r.recognize_google(audio, language='en-in').lower()
+        print(f"User Said: {command}")
         speak("OK")
 
-        if 'chrome' in userA:
+        if 'open chrome' in command:
             print("opening. .....")
             speak("opening chrome. .....")
             E.runAndWait()
-            open = sub.Popen(
-                "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe")
+            os.startfile("C:\\Users\\ADMIN\\Desktop\\Rigved - Chrome.lnk")
 
-        elif 'add' in userA:
+        elif 'maximise' in command:
+            pg.hotkey('alt', 'space')
+            pg.press('x')                 
+
+        elif 'minimise' in command:
+            pg.hotkey('alt', 'space')
+            pg.press('n')
+
+        elif "scroll down" in command:
+            pg.scroll(1000)
+
+        elif 'close' in command:
+            word = command.replace('close ', '')
+            app_name = f"{word.title()}.exe"
+            speak(f"closing {word}")
+            print(f'closing {app_name}')
+            os.system(f"taskkill /f /im {app_name} > NULL")
+
+        elif 'add' in command:
             speak("Surely I can do that.")
             E.runAndWait()
             speak("Please type the first number")
@@ -124,7 +131,7 @@ while True:
             speak(num3)
             E.runAndWait()
 
-        elif 'subtract' in userA:
+        elif 'subtract' in command:
             speak("Sure sir.")
             E.runAndWait()
             speak("Please type the first number")
@@ -137,7 +144,7 @@ while True:
             speak(numu)
             E.runAndWait()
 
-        elif 'multiplication' in userA:
+        elif 'multiplication' in command:
             speak("Sure sir I will do that for you!.")
             E.runAndWait()
             speak("Please type the first number")
@@ -149,7 +156,7 @@ while True:
             speak(f"the multiplication is {numk*numr}")
             E.runAndWait()
 
-        elif 'division' in userA:
+        elif 'division' in command:
             speak("At work. Right now!")
             E.runAndWait()
             speak("Please type the first number")
@@ -162,7 +169,7 @@ while True:
             speak(numm)
             E.runAndWait()
 
-        elif 'area of a triangle' in userA:
+        elif 'area of a triangle' in command:
             speak("Doing it sir!")
             E.runAndWait()
             speak("Please type the base:- ")
@@ -176,7 +183,7 @@ while True:
             print(f"The area of a triangle is {ans3}")
             E.runAndWait()
 
-        elif 'perimeter of a square' in userA:
+        elif 'perimeter of a square' in command:
             speak("Doing it for sir!")
             E.runAndWait()
             speak("Please type the first side")
@@ -186,15 +193,34 @@ while True:
             speak("Here it is:-")
             speak(num3)
             E.runAndWait()
+        elif "increase volume" in command:
+            pg.press("volumeup")
+            pg.press("volumeup")
+            pg.press("volumeup")
+            pg.press("volumeup")
+            pg.press("volumeup")
+            pg.press("volumeup")
+            pg.press("volumeup")
+            pg.press("volumeup")
 
-        elif 'play' in userA:
-            video = userA.replace('play', '')
+        elif "decrease volume" in command:
+            pg.press("volumedown")
+            pg.press("volumedown")
+            pg.press("volumedown")
+            pg.press("volumedown")
+            pg.press("volumedown")
+            pg.press("volumedown")
+            pg.press("volumedown")
+            pg.press("volumedown")
+
+        elif 'play' in command:
+            video = command.replace('play', '')
             speak(f'playing {video}')
             print("playing . .....")
             E.runAndWait()
             kit.playonyt(video)
 
-        elif 'temperature' in userA:
+        elif 'temperature' in command:
             speak('Enter the Place')
             place = input('Enter the Place:- ').lower()
             search = f'temeperature of {place}'
@@ -205,11 +231,12 @@ while True:
             speak(f"The current {search} is {temp}")
             print(f"The current {search} is {temp}")
 
-        elif 'iphone' in userA:
+        elif 'iphone' in command:
 
             speak('Enter The Model Number of Iphone')
-            i_model = float(input('Enter The Model Number of Iphone:- '))            
-            data = pd.read_csv("D:\\Rigved\\Python2\\Machine Learning\\Iphone Price Prediction\\Iphone_price.csv")
+            i_model = float(input('Enter The Model Number of Iphone:- '))
+            data = pd.read_csv(
+                "D:\\Rigved\\Python2\\Machine Learning\\Iphone Price Prediction\\Iphone_price.csv")
 
             model = LinearRegression()
             model.fit(data[['version']], data[['price']])
@@ -218,7 +245,7 @@ while True:
             print(f'Price of Iphone {i_model} would be Rupees {pred}')
             speak(f'Price of Iphone {i_model} would be Rupees {pred}')
 
-        elif 'time' in userA:
+        elif 'time' in command:
             now = datetime.datetime.now()
             speak("The currnt time is: ")
             E.runAndWait()
@@ -226,13 +253,13 @@ while True:
             print(now.strftime("%I:%M:%S"))
             E.runAndWait()
 
-        elif 'date' in userA:
+        elif 'date' in command:
             now = datetime.datetime.now()
             speak("The current date is:")
             E.runAndWait()
             speak(now.strftime("%D:%M:%Y"))
             print(now.strftime("%D:%M:%Y"))
-        elif 'clock' in userA:
+        elif 'clock' in command:
 
             # importing strftime function to
             # retrieve system's time
@@ -245,7 +272,7 @@ while True:
 
             def time():
                 string = strftime('%I:%M:%S %p')
-                now.config(text=string)
+                now.config(text=string) # type: ignore
                 now.after(200, time)
 
             # Styling the label widget so that clock
@@ -261,127 +288,124 @@ while True:
 
             root.mainloop()
 
-        elif 'notepad' in userA:
+        elif 'notepad' in command:
             speak("opening notepad. ")
             sub.Popen("C:\\WINDOWS\system32\\notepad.exe")
             E.runAndWait()
 
-        elif "joke" in userA:
+        elif "joke" in command:
             speak("Here it is!")
             E.runAndWait()
-            print(jokes.get_joke())
+            joke = jokes.get_joke()
+            print(joke)
+            speak(joke)
             E.runAndWait()
             speak("ha ha ha ha ha")
             E.runAndWait()
 
-        elif "gpt" in userA:
+        elif "gpt" in command:
             speak("opening gpt. ")
             E.runAndWait()
             url = "https://chat.openai.com/chat"
             print('Starting up your Browser...')
             web.open(url)
 
-        elif 'who' in userA:
-            p = userA.replace('who', '')
+        elif 'who' in command:
+            p = command.replace('who', '')
             info = wiki.summary(p, 3)
             print(info)
             speak(info)
             E.runAndWait()
 
-        elif 'what' in userA:
-            person = userA.replace('what is', '')
+        elif 'what' in command:
+            person = command.replace('what', '')
             info = wiki.summary(person, 3)
             print(info)
             speak(info)
             E.runAndWait()
 
-        elif 'where' in userA:
-            pr = userA.replace('where ', '')
+        elif 'where' in command:
+            pr = command.replace('where ', '')
             info = wiki.summary(pr, 2)
             print(info)
             speak(info)
             E.runAndWait()
 
-        elif 'how' in userA:
-            person = userA.replace('how many', '')
+        elif 'how' in command:
+            person = command.replace('how', '')
             howw = wiki.summary(person, 1)
             print(howw)
             speak(howw)
             E.runAndWait()
 
-        elif 'fact' in userA:
+        elif 'fact' in command:
             speak("")
             E.runAndWait()
 
-        elif 'your website' in userA:
-            web.open_new_tab('https://www.jarvisinvest.com/')
-            print('opening. .....')
-            speak('opening My website .....')
-            speak('Here it is !  ')
-            E.runAndWait()
-
-        elif 'toss' in userA:
+        elif 'toss' in command:
 
             Tsdo = random.choice(toss)
             # print(Tsdo+" wins")
             speak(Tsdo+" wins")
             E.runAndWait()
 
-        elif 'unwell' in userA:
+        elif 'unwell' in command:
             E.runAndWait()
             speak("Here are some clinics nearby:-")
             E.runAndWait()
             web.open("https://www.google.com/search?q=doctors+near+me&source=hp&ei=zSCeYM7LNt6H4-EPrpWv6Ak&eliflsig=AINFCbYAAAAAYJ4u3b1m6yl5YZglXzNhCoeK2dJqyuZT&oq=doctors+&gs_lcp=Cgdnd3Mtd2l6EAEYADIICAAQsQMQyQMyBQgAEJIDMgUIABCxAzelifCC4QsQMyBQgAELEDMggIABCxAxCDATelifCAAQsQMyCAguEMcBEK8BMggIABCxAxCDATICCAA6CwguELEDEMcBEKMCOggILhCxAxCDAToCCC5QrgZYjh1gvC1oAHAAeACAAcQBiAGJC5IBAzAuOJgBAKABAaoBB2d3cy13aXo&sclient=gws-wiz")
             E.runAndWait()
 
-        elif 'nice' in userA:
+        elif 'nice' in command:
             speak("Thank you for your compliment sir. It matters a lot!")
             E.runAndWait()
 
-        elif 'riddle' in userA:
+        elif 'riddle' in command:
             N = random.choice(M)
             print(N)
             speak(N)
             speak('Think for it ')
             E.runAndWait()
-        elif 'physician' in userA:
+
+        elif 'physician' in command:
             speak("Finding physicians nearby!")
             E.runAndWait()
             web.open("https://www.google.com/search?q=physician+near+me&source=hp&ei=zSWeYLnbMOvez7sPzquDoAU&iflsig=AINFCbYAAAAAYJ4z3UFbnwhwH1S2PB7uUkji0QVngyS6&oq=physicians+&gs_lcp=Cgdnd3Mtd2l6EAEYADIKCAAQsQMQyQMQCjIFCAAQkgMyBQgAEJIDMgIIADIHCAAQsQMQCjIECAAQCjICCAAyAggAMgIIADIHCAAQsQMQCjoICAAQsQMQgwE6CAguELEDEIMBOgUIABCxAzoICAAQsQMQyQM6BQguELEDUOIEWJMWYOsnaABwAHgAgAGvAYgBhg6SAQQwLjExmAEAoAEBqgEHZ3dzLXdpeg&sclient=gws-wiz")
 
-        elif 'Google' in userA:
+        elif 'google' in command:
             speak("Opening google for you!")
             E.runAndWait()
             web.open('www.google.com')
-        elif 'introduce' in userA:
+
+        elif 'introduce' in command:
             speak("I am a intelligent system known as Jarvis")
             speak("I can do anything for you ")
-            speak("if you want to visit my website, Then you can give me command as, open your website")
+            speak(
+                "if you want to visit my website, Then you can give me command as, open your website")
             E.runAndWait()
 
-        elif 'YouTube' in userA:
+        elif 'youtube' in command:
             speak("Opening youtube for you!")
             E.runAndWait()
-            web.open('youtube.com')
+            web.open('www.youtube.com')
 
-        elif 'hi' in userA:
+        elif 'hi' in command:
             greet = random.choice(greets)
             speak(greet)
             E.runAndWait()
 
-        elif 'bye' in userA:
+        elif 'bye' in command:
             speak('bye')
             print("Bye!")
             E.runAndWait()
 
-
-        elif 'news' in userA:
+        elif 'news' in command:
             speak("Opening some latest news for you sir!")
             E.runAndWait()
             web.open('chrome')
             web.open_new_tab("https://www.indiatoday.in/india")
 
-        elif 'stopwatch' in userA:
+        elif 'stopwatch' in command:
 
             speak("opening a stopwatch. .")
             E.runAndWait()
@@ -407,7 +431,7 @@ while True:
                     self.entry = tk.Entry(self, justify='center')
                     self.entry.focus_set()
                     self.start = tk.Button(self, text="Start",
-                                        command=self.start_button)
+                                            command=self.start_button)
 
                 def countdown(self):
                     '''Update label based on the time left.'''
@@ -447,44 +471,44 @@ while True:
 
                 root.mainloop()
 
-        elif 'awesome' in userA:
+        elif 'awesome' in command:
             speak("My pleasure sir!")
             E.runAndWait()
 
-        elif 'created you' in userA:
+        elif 'created you' in command:
             speak("Its none other than you!")
             E.runAndWait()
 
-        elif 'how are you' in userA:
+        elif 'how are you' in command:
             speak("I am awesome, and ready to take down your commands .")
             print("I am awesome, and ready to take down your commands .")
             E.runAndWait()
 
-        elif 'team website' in userA:
+        elif 'team website' in command:
             speak("Opening the team website for you sir!")
             web.open_new_tab(
                 "https://sites.google.com/d/1h31McjWEGCNP6i1LsSCty-Knowi_QK9w/p/1nmiVG4V6SdncFPqh771Vj99NDRQGa9XE/edit")
             E.runAndWait()
 
-        elif 'respond' in userA:
+        elif 'respond' in command:
             speak("At your service sir!")
             E.runAndWait()
 
-        elif 'timetable' in userA:
+        elif 'timetable' in command:
             speak("You have to get up at 7 3o, brush and get to breakfast. After that you have your breakfast and then you go for the school assignments given.. Then you have lunch and go play game. After completing it you go for the JARVIS conference and after that, watch Tv. That is how your schedule looks today sir")
             E.runAndWait()
 
-        elif 'shutdown' in userA:
+        elif 'shutdown' in command:
             speak("shuting down your pc. ")
             os.system("shutdown s \ t  1")
             break
 
-        elif 'sleep' in userA:
-            speak("Your pc will now sleep ")
+        elif 'sleep' in command:
+            speak("Your pc will now go to sleep ")
             os.system("sleep /s /t 1")
             break
 
-        elif 'alarm' in userA:
+        elif 'alarm' in command:
 
             speak("Type here for what do you want Alarm? ")
             E.runAndWait()
@@ -509,27 +533,22 @@ while True:
                 elif now > Alarm:
                     break
 
-        elif 'images' in userA:
+        elif 'images' in command:
             web.open_new_tab("Hd images")
             web.open("chrome")
             speak("displaing image")
             E.runAndWait()
             print("opening . . .")
 
-        elif 'cube' in userA:
+        elif 'cube timer' in command:
             speak("opening Cube stopwatch for you")
             E.runAndWait()
             print("opening. ...")
             web.open_new_tab("https://cstimer.net/")
 
-
-        elif 'reapeat' in userA:
-            speak(userA)
-            E.runAndWait()                
-
-    except speech.UnknownValueError:
-      speak("Could not understand audio")
-    except speech.RequestError as e:
-        speak("Sorry, there is no such feature here, work in progress")
+    except sr.UnknownValueError:
+        speak("Could not understand audio")
+    except sr.RequestError as e:
+        speak("Sorry, there is no such feature here, work in progress; {0}".format(e))
     except KeyboardInterrupt:
         break
